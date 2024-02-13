@@ -1,0 +1,85 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Fonts/GajrajOne-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Lemon-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://HUD.gd" type="Script" id=3]
+[ext_resource path="res://CountingLabel.gd" type="Script" id=4]
+[ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://Fonts/Tektur-VariableFont_wdth,wght.ttf" type="DynamicFontData" id=6]
+[ext_resource path="res://HighScoreLabel.gd" type="Script" id=7]
+
+[sub_resource type="DynamicFont" id=1]
+size = 95
+outline_size = 5
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 45
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 45
+font_data = ExtResource( 6 )
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource( 3 )
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="CountingLabel" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -288.0
+margin_top = 128.0
+margin_right = 288.0
+margin_bottom = 218.0
+custom_fonts/font = SubResource( 1 )
+text = "0"
+align = 1
+script = ExtResource( 4 )
+
+[node name="Button" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -250.0
+margin_top = -82.0
+margin_right = 250.0
+margin_bottom = 82.0
+custom_fonts/font = SubResource( 2 )
+text = "Click to Count!"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.219608, 0.294118, 0.443137, 1 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="CanvasLayer"]
+layer = -1
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="CanvasLayer/ParallaxBackground"]
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 5 )
+centered = false
+
+[node name="HighScoreLabel" type="Label" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -288.0
+margin_top = -96.0
+margin_right = -44.0
+margin_bottom = -37.0
+custom_fonts/font = SubResource( 3 )
+text = "Highscore: "
+align = 2
+script = ExtResource( 7 )
+
+[connection signal="pressed" from="Button" to="CountingLabel" method="_on_Button_pressed"]
