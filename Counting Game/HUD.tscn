@@ -65,6 +65,7 @@ layer = -1
 [node name="ParallaxLayer" type="ParallaxLayer" parent="CanvasLayer/ParallaxBackground"]
 
 [node name="Sprite" type="Sprite" parent="CanvasLayer/ParallaxBackground/ParallaxLayer"]
+position = Vector2( 2, 2 )
 texture = ExtResource( 5 )
 centered = false
 

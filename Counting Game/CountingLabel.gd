@@ -5,7 +5,77 @@ extends Label
 # var a = 2
 # var b = "text"
 var count = 0
+const increment = 1
 
+var ones = 0
+var tens = 0
+var hundreds = 0
+var thousands = 0
+var thousandTens = 0
+var thousandHundreds = 0
+
+var playSfx = false
+const wait = 35
+var timerOnes = wait
+var timerTens = wait
+var timerHundreds = wait
+var timerHundreds2 = wait
+var timerThousands = wait
+var timerThousands2 = wait
+var timerThousands3 = wait
+var timerThousands4 = wait
+
+const sfx = [preload("res://Audio/1.wav"), preload("res://Audio/1.wav"), preload("res://Audio/2.wav"), 
+preload("res://Audio/3.wav"), 
+preload("res://Audio/4.wav"), preload("res://Audio/5.wav"), preload("res://Audio/6.wav"), 
+preload("res://Audio/7.wav"), preload("res://Audio/8.wav"), preload("res://Audio/9.wav"), 
+preload("res://Audio/10.wav"), preload("res://Audio/11.wav"), preload("res://Audio/12.wav"), 
+preload("res://Audio/13.wav"), preload("res://Audio/14.wav"), preload("res://Audio/15.wav"),
+preload("res://Audio/16.wav"), preload("res://Audio/17.wav"), preload("res://Audio/18.wav"), 
+preload("res://Audio/19.wav")] 
+
+const sfxTens = [preload("res://Audio/10.wav"), preload("res://Audio/10.wav"), preload("res://Audio/20.wav"), 
+preload("res://Audio/30.wav"),
+preload("res://Audio/40.wav"), preload("res://Audio/50.wav"), preload("res://Audio/60.wav"), 
+preload("res://Audio/70.wav"), preload("res://Audio/80.wav"), preload("res://Audio/90.wav")]
+
+const sfxHundred = preload("res://Audio/hundred.wav")
+const sfxThousand = preload("res://Audio/thousand.wav")
+const sfxMillion = preload("res://Audio/million.wav")
+
+func playOnesSfx():
+	if timerOnes == wait: Sfxhandler.play_sfx(sfx[ones], self)
+	timerOnes -= 1
+	if timerOnes <= 0: playSfx = false
+	
+func playTensSfx():
+	if tens < 2: timerTens = 0
+	if timerTens == wait: Sfxhandler.play_sfx(sfxTens[tens], self)
+	timerTens -= 1 
+	if ones != 0:
+		if timerTens <= 0:
+			playOnesSfx()
+	else:
+		if timerTens <= 0: playSfx = false
+
+func playHundredsSfx():
+	if timerHundreds == wait: Sfxhandler.play_sfx(sfx[hundreds], self)
+	timerHundreds -= 1
+	if timerHundreds <= 0:
+		if timerHundreds2 == wait: Sfxhandler.play_sfx(sfxHundred, self)
+		timerHundreds2 -= 1
+		if timerHundreds2 <= 0:
+			playTensSfx()
+			
+func playThousandsSfx():
+	if timerThousands == wait: Sfxhandler.play_sfx(sfx[thousands], self)
+	timerThousands -= 1
+	if timerThousands <= 0:
+		if timerThousands2 == wait: Sfxhandler.play_sfx(sfxThousand, self)
+		timerThousands2 -= 1
+		if timerThousands2 <= 0:
+			if hundreds > 0: playHundredsSfx()
+			else: playTensSfx()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -15,9 +85,73 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	self.text = str(count)
-
+	if playSfx:
+		#if thousands > 99:
+			
+		if thousandTens > 1 and thousandTens < 10:
+			if timerThousands3 == wait: Sfxhandler.play_sfx(sfxTens[thousandTens], self)
+			timerThousands3 -= 1 
+			if thousands != 0:
+				if timerThousands3 <= 0:
+					playThousandsSfx()
+			else:
+				if timerThousands3 <= 0: playSfx = false
+		if thousands > 0 and thousands < 20:
+			playThousandsSfx()
+		else: 
+			if hundreds > 0:
+				playHundredsSfx()
+			else:
+				if tens > 1:
+					playTensSfx()
+				else:
+					playOnesSfx()
+			
+		
+		
+		
+		
 
 func _on_Button_pressed():
-	count += 1
-	if count > Globals.HIGH_SCORE:
-		Globals.HIGH_SCORE = count
+	if !playSfx:
+		count += increment
+		
+		ones += increment
+		if ones == 10 or ones == 20: 
+			tens += 1
+			if tens > 1:
+				ones = 0
+		if tens > 9:
+			hundreds += 1
+			tens = 0
+		if hundreds > 9:
+			thousands += 1
+			hundreds = 0
+		if thousands == 10 or thousands == 20:
+			thousandTens += 1
+			if thousandTens > 1:
+				thousands = 0
+		if thousandTens > 9:
+			thousandHundreds += 1
+			thousandTens = 0
+		
+		#reset all timers and playSfx in delta time
+		timerOnes = wait
+		timerTens = wait
+		timerHundreds = wait
+		timerHundreds2 = wait
+		timerThousands = wait
+		timerThousands2 = wait
+		playSfx = true
+			
+		if count > Globals.HIGH_SCORE:
+			Globals.HIGH_SCORE = count
+
+# If number's final character is a 1 and its second to last character is not a 1, play "one"
+# Same with 2, 3, 4, 5, 6, 7, 8, 9
+# If number's final two characters are 10, play "ten", same with rest of the teens
+# If number's second to last character is 2, play "twenty", same with 30, 40, 50, 60, 70, 80, 90
+# If number's third to last character is 1, play "one hundred", same with 200, 300, 400, 500, 600, 700, 800, 900
+# If any character is 0, ignore it
+# Repeat same set of steps for thousands. when 1,000,000 is reached, you are winner
+# You'll need sound effects for 1-19, 20, 30, 40, 50, 60, 70, 80, 90, hundred, thousand, million
