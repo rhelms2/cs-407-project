@@ -29,6 +29,7 @@ font_data = ExtResource( 1 )
 
 [resource]
 default_font = SubResource( 4 )
+Button/colors/font_color_pressed = Color( 0.415686, 0.415686, 0.415686, 1 )
 Button/styles/hover = SubResource( 6 )
 Button/styles/normal = ExtResource( 2 )
 Button/styles/pressed = SubResource( 7 )

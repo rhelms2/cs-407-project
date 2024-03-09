@@ -1,6 +1,5 @@
 extends Label
 
-
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
@@ -180,6 +179,8 @@ func Count():
 		
 	if count > Globals.HIGH_SCORE:
 		Globals.HIGH_SCORE = count
+		Globals.save()
+		
 
 # If number's final character is a 1 and its second to last character is not a 1, play "one"
 # Same with 2, 3, 4, 5, 6, 7, 8, 9

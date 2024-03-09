@@ -16,7 +16,8 @@ use_filter = true
 font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=2]
-size = 77
+size = 80
+outline_size = 1
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 4 )
 
@@ -70,18 +71,17 @@ flip_h = true
 layer = 2
 
 [node name="SceneTransitionRect" parent="TransitionLayer" instance=ExtResource( 2 )]
-visible = false
 color = Color( 1, 1, 1, 1 )
 
 [node name="Label" type="Label" parent="."]
 margin_left = -3.0
-margin_top = 82.0
+margin_top = 64.0
 margin_right = 573.0
-margin_bottom = 542.0
+margin_bottom = 539.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 0
+custom_constants/shadow_offset_x = -5
 custom_constants/line_spacing = 0
 custom_constants/shadow_offset_y = 5
 custom_constants/shadow_as_outline = 0

@@ -1,17 +1,19 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Fonts/GajrajOne-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/MontserratAlternates-Bold.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://HUD.gd" type="Script" id=3]
 [ext_resource path="res://CountingLabel.gd" type="Script" id=4]
 [ext_resource path="res://icon.png" type="Texture" id=5]
-[ext_resource path="res://Fonts/Tektur-VariableFont_wdth,wght.ttf" type="DynamicFontData" id=6]
 [ext_resource path="res://HighScoreLabel.gd" type="Script" id=7]
 [ext_resource path="res://SceneTransition.tscn" type="PackedScene" id=8]
 [ext_resource path="res://ButtonTheme.tres" type="Theme" id=9]
+[ext_resource path="res://ExitButton.gd" type="Script" id=10]
+[ext_resource path="res://gradient.tres" type="Texture" id=11]
 
 [sub_resource type="DynamicFont" id=1]
 size = 95
+outline_size = 6
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
@@ -21,7 +23,63 @@ font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 45
-font_data = ExtResource( 6 )
+outline_size = 6
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[sub_resource type="StyleBoxFlat" id=6]
+bg_color = Color( 0.909804, 0.501961, 0.501961, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_size = 5
+shadow_offset = Vector2( -2, 5 )
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.886275, 0.0941176, 0.0941176, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 1, 1, 1, 1 )
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_size = 5
+shadow_offset = Vector2( -2, 5 )
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.317647, 0.0431373, 0.0431373, 1 )
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color( 0.278431, 0.278431, 0.278431, 1 )
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+shadow_color = Color( 0, 0, 0, 1 )
+shadow_size = 5
+shadow_offset = Vector2( -2, 5 )
+
+[sub_resource type="Theme" id=9]
+Button/styles/hover = SubResource( 6 )
+Button/styles/normal = SubResource( 8 )
+Button/styles/pressed = SubResource( 7 )
+
+[sub_resource type="DynamicFont" id=10]
+size = 68
+font_data = ExtResource( 2 )
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 3 )
@@ -38,12 +96,11 @@ color = Color( 1, 1, 1, 1 )
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -288.0
-margin_top = 128.0
+margin_top = 180.0
 margin_right = 288.0
-margin_bottom = 218.0
+margin_bottom = 320.0
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_constants/shadow_offset_x = -4
 custom_constants/line_spacing = 0
 custom_constants/shadow_offset_y = 6
@@ -69,10 +126,20 @@ text = "Click to Count!"
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -1
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0.403922, 0.494118, 1, 1 )
+margin_top = 1024.0
+margin_right = 448.0
+margin_bottom = 576.0
+rect_rotation = 270.0
+texture = ExtResource( 11 )
+expand = true
+stretch_mode = 1
+flip_h = true
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="CanvasLayer"]
 layer = -1
@@ -85,17 +152,34 @@ texture = ExtResource( 5 )
 centered = false
 
 [node name="HighScoreLabel" type="Label" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -288.0
-margin_top = -96.0
-margin_right = -44.0
-margin_bottom = -37.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -188.5
+margin_top = 258.0
+margin_right = 188.5
+margin_bottom = 370.0
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = -2
+custom_constants/line_spacing = 0
+custom_constants/shadow_offset_y = 6
+custom_constants/shadow_as_outline = 0
 custom_fonts/font = SubResource( 3 )
-text = "Highscore: "
-align = 2
+text = "RECORD: 
+10"
+align = 1
 script = ExtResource( 7 )
+
+[node name="ExitButton" type="Button" parent="."]
+margin_left = 25.0
+margin_top = 25.0
+margin_right = 130.0
+margin_bottom = 127.0
+theme = SubResource( 9 )
+custom_fonts/font = SubResource( 10 )
+text = "x"
+script = ExtResource( 10 )
 
 [connection signal="pressed" from="Button" to="CountingLabel" method="_on_Button_pressed"]

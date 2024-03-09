@@ -11,6 +11,7 @@ var sfxPlayed = false
 func _ready():
 	rng.randomize()
 	sfxNum = rng.randi_range(0, 2)
+	Globals.load_data()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

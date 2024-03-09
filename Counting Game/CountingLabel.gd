@@ -44,6 +44,8 @@ const sfxHundred = preload("res://Audio/hundred.wav")
 const sfxThousand = preload("res://Audio/thousand.wav")
 const sfxMillion = preload("res://Audio/million.wav")
 
+const sfxClick = preload("res://Audio/click.wav")
+
 func playOnesSfx():
 	if timerOnes == wait: Sfxhandler.play_sfx(sfx[ones], self)
 	timerOnes -= 1
@@ -121,6 +123,7 @@ func _process(delta):
 func _on_Button_pressed():
 	if !playSfx:
 		count += increment
+		Sfxhandler.play_sfx(sfxClick, self)
 		
 		ones += increment
 		if ones == 10 or ones == 20: 
@@ -155,6 +158,7 @@ func _on_Button_pressed():
 			
 		if count > Globals.HIGH_SCORE:
 			Globals.HIGH_SCORE = count
+			Globals.save()
 
 # If number's final character is a 1 and its second to last character is not a 1, play "one"
 # Same with 2, 3, 4, 5, 6, 7, 8, 9

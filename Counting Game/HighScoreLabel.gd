@@ -13,4 +13,4 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	self.text = "Highscore: " + str(Globals.HIGH_SCORE)
+	self.text = "RECORD:\n" + str(Globals.HIGH_SCORE)
