@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Louder3.wav-7400ac15490e73208938a4fb94b8f081.sample"
+
+[deps]
+
+source_file="res://Audio/Louder3.wav"
+dest_files=[ "res://.import/Louder3.wav-7400ac15490e73208938a4fb94b8f081.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

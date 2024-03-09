@@ -8,3 +8,6 @@ func play_sfx(sound: AudioStream, parent: Node):
 		stream.connect("finished", stream, "queue_free")		
 		parent.add_child(stream)
 		stream.play()
+		
+
+	

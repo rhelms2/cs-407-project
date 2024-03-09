@@ -26,6 +26,9 @@ var timerThousands3 = wait
 var timerThousands4 = wait
 var timerThousands5 = wait
 
+var rng = RandomNumberGenerator.new()
+var countWait = 30
+
 const sfx = [preload("res://Audio/1.wav"), preload("res://Audio/1.wav"), preload("res://Audio/2.wav"), 
 preload("res://Audio/3.wav"), 
 preload("res://Audio/4.wav"), preload("res://Audio/5.wav"), preload("res://Audio/6.wav"), 
@@ -43,6 +46,14 @@ preload("res://Audio/70.wav"), preload("res://Audio/80.wav"), preload("res://Aud
 const sfxHundred = preload("res://Audio/hundred.wav")
 const sfxThousand = preload("res://Audio/thousand.wav")
 const sfxMillion = preload("res://Audio/million.wav")
+
+var encourageRNG #gets number between 1 and 10. If 10, play encouragement sound effect
+var sfxEncourageNum
+const sfxEncourage = [preload("res://Audio/Louder1.wav"), preload("res://Audio/Louder2.wav"), preload("res://Audio/Louder3.wav"), 
+preload("res://Audio/Louder4.wav"), preload("res://Audio/Louder5.wav")]
+
+onready var encourageStream = $AudioStreamPlayer
+var encourageSndPlayed = false
 
 func playOnesSfx():
 	if timerOnes == wait: Sfxhandler.play_sfx(sfx[ones], self)
@@ -87,7 +98,7 @@ func playThousandTensSfx():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	rng.randomize()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -112,49 +123,63 @@ func _process(delta):
 			playTensSfx()
 		else:
 			playOnesSfx()
-			
-		
+	if !playSfx: 
+		countWait -= 1
+		if countWait <= 0:
+			if !encourageSndPlayed: encourageRNG = rng.randi_range(0, 10)
+			if encourageRNG < 10:
+				Count()
+				countWait = rng.randi_range(20,30)
+			else:
+				if !encourageSndPlayed: 
+					sfxEncourageNum = rng.randi_range(0, 4)
+					encourageStream.stream = sfxEncourage[sfxEncourageNum]
+					encourageStream.play()
+					encourageSndPlayed = true
+				if !encourageStream.playing and encourageSndPlayed:
+					Count()
+					countWait = rng.randi_range(20,30)
+					encourageSndPlayed = false
 		
 		
 		
 
-func _on_Button_pressed():
-	if !playSfx:
-		count += increment
+func Count():
+	count += increment
+	
+	ones += increment
+	if ones == 10 or ones == 20: 
+		tens += 1
+		if tens > 1:
+			ones = 0
+	if tens > 9:
+		hundreds += 1
+		tens = 0
+	if hundreds > 9:
+		thousands += 1
+		hundreds = 0
+	if thousands == 10 or thousands == 20:
+		thousandTens += 1
+		if thousandTens > 1:
+			thousands = 0
+	if thousandTens > 9:
+		thousandHundreds += 1
+		thousandTens = 0
+	
+	#reset all timers and playSfx in delta time
+	timerOnes = wait
+	timerTens = wait
+	timerHundreds = wait
+	timerHundreds2 = wait
+	timerThousands = wait
+	timerThousands2 = wait
+	timerThousands3 = wait
+	timerThousands4 = wait
+	timerThousands5 = wait
+	playSfx = true
 		
-		ones += increment
-		if ones == 10 or ones == 20: 
-			tens += 1
-			if tens > 1:
-				ones = 0
-		if tens > 9:
-			hundreds += 1
-			tens = 0
-		if hundreds > 9:
-			thousands += 1
-			hundreds = 0
-		if thousands == 10 or thousands == 20:
-			thousandTens += 1
-			if thousandTens > 1:
-				thousands = 0
-		if thousandTens > 9:
-			thousandHundreds += 1
-			thousandTens = 0
-		
-		#reset all timers and playSfx in delta time
-		timerOnes = wait
-		timerTens = wait
-		timerHundreds = wait
-		timerHundreds2 = wait
-		timerThousands = wait
-		timerThousands2 = wait
-		timerThousands3 = wait
-		timerThousands4 = wait
-		timerThousands5 = wait
-		playSfx = true
-			
-		if count > Globals.HIGH_SCORE:
-			Globals.HIGH_SCORE = count
+	if count > Globals.HIGH_SCORE:
+		Globals.HIGH_SCORE = count
 
 # If number's final character is a 1 and its second to last character is not a 1, play "one"
 # Same with 2, 3, 4, 5, 6, 7, 8, 9
