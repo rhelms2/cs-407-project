@@ -46,10 +46,26 @@ const sfxMillion = preload("res://Audio/million.wav")
 
 const sfxClick = preload("res://Audio/click.wav")
 
+var rng = RandomNumberGenerator.new()
+
+onready var encourageStream = $AudioStreamPlayer
+
+var highScorePassed = false
+const sfxPassHighScore = preload("res://Audio/highScore.wav")
+const sfxCongrats = [preload("res://Audio/good1.wav"), preload("res://Audio/good2.wav"), preload("res://Audio/good3.wav"),
+preload("res://Audio/good4.wav"), preload("res://Audio/good5.wav"), preload("res://Audio/good6.wav"),
+preload("res://Audio/good7.wav"), preload("res://Audio/good8.wav"), preload("res://Audio/good9.wav"),
+preload("res://Audio/good10.wav")]
+var highScoreSndPlayed = false
+var congratsSndPlayed = false
+var sfxCongratsNum
+var playHighScoreSnd = false
+var highScoreSndTimer = 35
+
 func playOnesSfx():
 	if timerOnes == wait: Sfxhandler.play_sfx(sfx[ones], self)
 	timerOnes -= 1
-	if timerOnes <= 0: playSfx = false
+	if timerOnes <= 0 and !playHighScoreSnd: playSfx = false
 	
 func playTensSfx():
 	if tens < 2: timerTens = 0
@@ -59,7 +75,7 @@ func playTensSfx():
 		if timerTens <= 0:
 			playOnesSfx()
 	else:
-		if timerTens <= 0: playSfx = false
+		if timerTens <= 0 and !playHighScoreSnd: playSfx = false
 
 func playHundredsSfx():
 	if timerHundreds == wait: Sfxhandler.play_sfx(sfx[hundreds], self)
@@ -89,7 +105,7 @@ func playThousandTensSfx():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass
+	rng.randomize()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -115,7 +131,22 @@ func _process(delta):
 		else:
 			playOnesSfx()
 			
-		
+		if playHighScoreSnd:
+			highScoreSndTimer -= 1
+			if highScoreSndTimer <= 0:
+				if !highScoreSndPlayed and !encourageStream.playing:
+					encourageStream.stream = sfxPassHighScore
+					encourageStream.play()
+					highScoreSndPlayed = true
+				if highScoreSndPlayed and !congratsSndPlayed and !encourageStream.playing:
+					sfxCongratsNum = rng.randi_range(0, 9)
+					encourageStream.stream = sfxCongrats[sfxCongratsNum]
+					encourageStream.play()
+					congratsSndPlayed = true
+				if congratsSndPlayed and !encourageStream.playing:
+					highScorePassed = true
+					playHighScoreSnd = false
+					playSfx = false
 		
 		
 		
@@ -159,6 +190,8 @@ func _on_Button_pressed():
 		if count > Globals.HIGH_SCORE:
 			Globals.HIGH_SCORE = count
 			Globals.save()
+			if !highScorePassed and Globals.HIGH_SCORE > 1:
+				playHighScoreSnd = true
 
 # If number's final character is a 1 and its second to last character is not a 1, play "one"
 # Same with 2, 3, 4, 5, 6, 7, 8, 9

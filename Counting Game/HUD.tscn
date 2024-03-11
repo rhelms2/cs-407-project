@@ -1,10 +1,11 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
-[ext_resource path="res://Fonts/GajrajOne-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Fonts/Merriweather-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Fonts/MontserratAlternates-Bold.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://HUD.gd" type="Script" id=3]
 [ext_resource path="res://CountingLabel.gd" type="Script" id=4]
 [ext_resource path="res://icon.png" type="Texture" id=5]
+[ext_resource path="res://Audio/Louder5.wav" type="AudioStream" id=6]
 [ext_resource path="res://HighScoreLabel.gd" type="Script" id=7]
 [ext_resource path="res://SceneTransition.tscn" type="PackedScene" id=8]
 [ext_resource path="res://ButtonTheme.tres" type="Theme" id=9]
@@ -13,7 +14,7 @@
 
 [sub_resource type="DynamicFont" id=1]
 size = 95
-outline_size = 6
+outline_size = 5
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 1 )
 
@@ -23,7 +24,7 @@ font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=3]
 size = 45
-outline_size = 6
+outline_size = 5
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
@@ -41,6 +42,7 @@ corner_radius_bottom_left = 40
 shadow_color = Color( 0, 0, 0, 1 )
 shadow_size = 5
 shadow_offset = Vector2( -2, 5 )
+anti_aliasing_size = 1.5
 
 [sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0.886275, 0.0941176, 0.0941176, 1 )
@@ -56,6 +58,7 @@ corner_radius_bottom_left = 40
 shadow_color = Color( 0, 0, 0, 1 )
 shadow_size = 5
 shadow_offset = Vector2( -2, 5 )
+anti_aliasing_size = 1.5
 
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.317647, 0.0431373, 0.0431373, 1 )
@@ -71,8 +74,10 @@ corner_radius_bottom_left = 40
 shadow_color = Color( 0, 0, 0, 1 )
 shadow_size = 5
 shadow_offset = Vector2( -2, 5 )
+anti_aliasing_size = 1.5
 
 [sub_resource type="Theme" id=9]
+Button/colors/font_color_pressed = Color( 0.282353, 0.282353, 0.282353, 1 )
 Button/styles/hover = SubResource( 6 )
 Button/styles/normal = SubResource( 8 )
 Button/styles/pressed = SubResource( 7 )
@@ -109,6 +114,9 @@ custom_fonts/font = SubResource( 1 )
 text = "0"
 align = 1
 script = ExtResource( 4 )
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CountingLabel"]
+stream = ExtResource( 6 )
 
 [node name="Button" type="Button" parent="."]
 anchor_left = 0.5

@@ -49,15 +49,33 @@ const sfxMillion = preload("res://Audio/million.wav")
 var encourageRNG #gets number between 1 and 10. If 10, play encouragement sound effect
 var sfxEncourageNum
 const sfxEncourage = [preload("res://Audio/Louder1.wav"), preload("res://Audio/Louder2.wav"), preload("res://Audio/Louder3.wav"), 
-preload("res://Audio/Louder4.wav"), preload("res://Audio/Louder5.wav")]
+preload("res://Audio/Louder4.wav"), preload("res://Audio/Louder5.wav"), preload("res://Audio/Louder6.wav"),
+preload("res://Audio/Louder7.wav"), preload("res://Audio/Louder8.wav"), preload("res://Audio/Louder9.wav"), 
+preload("res://Audio/Louder10.wav"), preload("res://Audio/Louder11.wav"), preload("res://Audio/Louder12.wav")]
 
 onready var encourageStream = $AudioStreamPlayer
 var encourageSndPlayed = false
 
+var highScorePassed = false
+const sfxPassHighScore = preload("res://Audio/highScore.wav")
+const sfxCongrats = [preload("res://Audio/good1.wav"), preload("res://Audio/good2.wav"), preload("res://Audio/good3.wav"),
+preload("res://Audio/good4.wav"), preload("res://Audio/good5.wav"), preload("res://Audio/good6.wav"),
+preload("res://Audio/good7.wav"), preload("res://Audio/good8.wav"), preload("res://Audio/good9.wav"),
+preload("res://Audio/good10.wav")]
+var highScoreSndPlayed = false
+var congratsSndPlayed = false
+var sfxCongratsNum
+var playHighScoreSnd = false
+var highScoreSndTimer = 35
+
+var startCount = false
+const sfxStart = preload("res://Audio/countStart.wav")
+var startSndPlayed = false
+
 func playOnesSfx():
 	if timerOnes == wait: Sfxhandler.play_sfx(sfx[ones], self)
 	timerOnes -= 1
-	if timerOnes <= 0: playSfx = false
+	if timerOnes <= 0 and !playHighScoreSnd: playSfx = false
 	
 func playTensSfx():
 	if tens < 2: timerTens = 0
@@ -67,7 +85,7 @@ func playTensSfx():
 		if timerTens <= 0:
 			playOnesSfx()
 	else:
-		if timerTens <= 0: playSfx = false
+		if timerTens <= 0 and !playHighScoreSnd: playSfx = false
 
 func playHundredsSfx():
 	if timerHundreds == wait: Sfxhandler.play_sfx(sfx[hundreds], self)
@@ -103,6 +121,15 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	self.text = str(count)
+	
+	if !startCount:
+		if !startSndPlayed:
+			encourageStream.stream = sfxStart
+			encourageStream.play()
+			startSndPlayed = true
+		if startSndPlayed and !encourageStream.playing:
+			startCount = true
+	
 	if playSfx:
 		if thousandHundreds > 0:
 			if timerThousands4 == wait: Sfxhandler.play_sfx(sfx[thousandHundreds], self)
@@ -122,16 +149,34 @@ func _process(delta):
 			playTensSfx()
 		else:
 			playOnesSfx()
-	if !playSfx: 
+			
+		if playHighScoreSnd:
+			highScoreSndTimer -= 1
+			if highScoreSndTimer <= 0:
+				if !highScoreSndPlayed and !encourageStream.playing:
+					encourageStream.stream = sfxPassHighScore
+					encourageStream.play()
+					highScoreSndPlayed = true
+				if highScoreSndPlayed and !congratsSndPlayed and !encourageStream.playing:
+					sfxCongratsNum = rng.randi_range(0, 9)
+					encourageStream.stream = sfxCongrats[sfxCongratsNum]
+					encourageStream.play()
+					congratsSndPlayed = true
+				if congratsSndPlayed and !encourageStream.playing:
+					highScorePassed = true
+					playHighScoreSnd = false
+					playSfx = false
+			
+	if !playSfx and startCount: 
 		countWait -= 1
 		if countWait <= 0:
 			if !encourageSndPlayed: encourageRNG = rng.randi_range(0, 10)
 			if encourageRNG < 10:
 				Count()
 				countWait = rng.randi_range(20,30)
-			else:
+			elif count > 5:
 				if !encourageSndPlayed: 
-					sfxEncourageNum = rng.randi_range(0, 4)
+					sfxEncourageNum = rng.randi_range(0, 11)
 					encourageStream.stream = sfxEncourage[sfxEncourageNum]
 					encourageStream.play()
 					encourageSndPlayed = true
@@ -144,6 +189,7 @@ func _process(delta):
 		
 
 func Count():
+	
 	count += increment
 	
 	ones += increment
@@ -180,6 +226,9 @@ func Count():
 	if count > Globals.HIGH_SCORE:
 		Globals.HIGH_SCORE = count
 		Globals.save()
+		if !highScorePassed and Globals.HIGH_SCORE > 1:
+			playHighScoreSnd = true
+		
 		
 
 # If number's final character is a 1 and its second to last character is not a 1, play "one"

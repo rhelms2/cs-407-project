@@ -66,6 +66,9 @@ texture = ExtResource( 7 )
 expand = true
 stretch_mode = 1
 flip_h = true
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="TransitionLayer" type="CanvasLayer" parent="."]
 layer = 2
